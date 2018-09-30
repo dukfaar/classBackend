@@ -165,11 +165,12 @@ func (r *Resolver) Class(ctx context.Context, args struct {
 }
 
 func (r *Resolver) ClassByName(ctx context.Context, args struct {
-	Name string
+	Name        string
+	NamespaceId *string
 }) (*class.Resolver, error) {
 	classService := ctx.Value("classService").(class.Service)
 
-	queryNamespace, err := classService.FindByName(args.Name)
+	queryNamespace, err := classService.FindByName(args.Name, args.NamespaceId)
 
 	if err == nil {
 		return &class.Resolver{
@@ -181,11 +182,12 @@ func (r *Resolver) ClassByName(ctx context.Context, args struct {
 }
 
 func (r *Resolver) ClassByNameOrSynonym(ctx context.Context, args struct {
-	Name string
+	Name        string
+	NamespaceId *string
 }) (*class.Resolver, error) {
 	classService := ctx.Value("classService").(class.Service)
 
-	queryNamespace, err := classService.FindByNameOrSynonym(args.Name)
+	queryNamespace, err := classService.FindByNameOrSynonym(args.Name, args.NamespaceId)
 
 	if err == nil {
 		return &class.Resolver{

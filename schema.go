@@ -14,8 +14,8 @@ var Schema string = `
 		type Query {
 			classes(first: Int, last: Int, before: String, after: String): ClassConnection!
 			class(id: ID!): Class!
-			classByName(name: String!): Class!
-			classByNameOrSynonym(name: String!): Class!
+			classByName(name: String!, namespaceId: ID): Class!
+			classByNameOrSynonym(name: String!, namespaceId: ID): Class!
 		}
 
 		input ClassMutationInput {

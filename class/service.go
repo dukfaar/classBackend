@@ -11,8 +11,8 @@ type Service interface {
 	Create(*Model) (*Model, error)
 	DeleteByID(id string) (string, error)
 	FindByID(id string) (*Model, error)
-	FindByName(name string) (*Model, error)
-	FindByNameOrSynonym(name string) (*Model, error)
+	FindByName(name string, namespaceId *string) (*Model, error)
+	FindByNameOrSynonym(name string, namespaceId *string) (*Model, error)
 	Update(string, interface{}) (*Model, error)
 
 	HasElementBeforeID(id string) (bool, error)
@@ -85,23 +85,35 @@ func (s *MgoService) FindByID(id string) (*Model, error) {
 	return &result, err
 }
 
-func (s *MgoService) FindByName(name string) (*Model, error) {
+func (s *MgoService) FindByName(name string, namespaceId *string) (*Model, error) {
 	var result Model
+
+	query := bson.M{"name": name}
+
+	if namespaceId != nil {
+		query["namespaceId"] = bson.ObjectIdHex(*namespaceId)
+	}
 
 	err := s.collection.Find(bson.M{"name": name}).One(&result)
 
 	return &result, err
 }
 
-func (s *MgoService) FindByNameOrSynonym(name string) (*Model, error) {
+func (s *MgoService) FindByNameOrSynonym(name string, namespaceId *string) (*Model, error) {
 	var result Model
 
-	err := s.collection.Find(bson.M{
+	query := bson.M{
 		"$or": []bson.M{
 			bson.M{"name": name},
 			bson.M{"synonyms": name},
 		},
-	}).One(&result)
+	}
+
+	if namespaceId != nil {
+		query["namespaceId"] = bson.ObjectIdHex(*namespaceId)
+	}
+
+	err := s.collection.Find(query).One(&result)
 
 	return &result, err
 }
