@@ -4,6 +4,7 @@ import (
 	"context"
 
 	"github.com/dukfaar/classBackend/class"
+	"github.com/dukfaar/goUtils/permission"
 	"github.com/dukfaar/goUtils/relay"
 	"github.com/globalsign/mgo/bson"
 	graphql "github.com/graph-gophers/graphql-go"
@@ -81,6 +82,11 @@ func setDataOnModel(model *class.Model, input *class.MutationInput) {
 func (r *Resolver) CreateClass(ctx context.Context, args struct {
 	Input *class.MutationInput
 }) (*class.Resolver, error) {
+	err := permission.Check(ctx, "mutation.createClass")
+	if err != nil {
+		return nil, err
+	}
+
 	classService := ctx.Value("classService").(class.Service)
 
 	inputModel := class.Model{}
@@ -101,6 +107,11 @@ func (r *Resolver) UpdateClass(ctx context.Context, args struct {
 	Id    string
 	Input *class.MutationInput
 }) (*class.Resolver, error) {
+	err := permission.Check(ctx, "mutation.updateClass")
+	if err != nil {
+		return nil, err
+	}
+
 	classService := ctx.Value("classService").(class.Service)
 
 	model, err := classService.FindByID(args.Id)
@@ -120,6 +131,11 @@ func (r *Resolver) UpdateClass(ctx context.Context, args struct {
 func (r *Resolver) DeleteClass(ctx context.Context, args struct {
 	Id string
 }) (*graphql.ID, error) {
+	err := permission.Check(ctx, "mutation.deleteClass")
+	if err != nil {
+		return nil, err
+	}
+
 	classService := ctx.Value("classService").(class.Service)
 
 	deletedID, err := classService.DeleteByID(args.Id)
@@ -154,6 +170,22 @@ func (r *Resolver) ClassByName(ctx context.Context, args struct {
 	classService := ctx.Value("classService").(class.Service)
 
 	queryNamespace, err := classService.FindByName(args.Name)
+
+	if err == nil {
+		return &class.Resolver{
+			Model: queryNamespace,
+		}, nil
+	}
+
+	return nil, err
+}
+
+func (r *Resolver) ClassByNameOrSynonym(ctx context.Context, args struct {
+	Name string
+}) (*class.Resolver, error) {
+	classService := ctx.Value("classService").(class.Service)
+
+	queryNamespace, err := classService.FindByNameOrSynonym(args.Name)
 
 	if err == nil {
 		return &class.Resolver{

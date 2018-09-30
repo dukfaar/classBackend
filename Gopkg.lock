@@ -15,6 +15,7 @@
     "eventbus",
     "graphql",
     "http",
+    "permission",
     "relay",
     "service"
   ]
@@ -138,6 +139,6 @@
 [solve-meta]
   analyzer-name = "dep"
   analyzer-version = 1
-  inputs-digest = "2d04e1db519433bcfcb23eadc2da62f5160b83069e5a983611a15777ddcebff5"
+  inputs-digest = "1eadb5579dcbe70312c91d28de1f913ec5fc024af3f101d242a1508ff83bfb43"
   solver-name = "gps-cdcl"
   solver-version = 1

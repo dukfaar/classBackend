@@ -12,6 +12,7 @@ type Service interface {
 	DeleteByID(id string) (string, error)
 	FindByID(id string) (*Model, error)
 	FindByName(name string) (*Model, error)
+	FindByNameOrSynonym(name string) (*Model, error)
 	Update(string, interface{}) (*Model, error)
 
 	HasElementBeforeID(id string) (bool, error)
@@ -88,6 +89,19 @@ func (s *MgoService) FindByName(name string) (*Model, error) {
 	var result Model
 
 	err := s.collection.Find(bson.M{"name": name}).One(&result)
+
+	return &result, err
+}
+
+func (s *MgoService) FindByNameOrSynonym(name string) (*Model, error) {
+	var result Model
+
+	err := s.collection.Find(bson.M{
+		"$or": []bson.M{
+			bson.M{"name": name},
+			bson.M{"synonyms": name},
+		},
+	}).One(&result)
 
 	return &result, err
 }

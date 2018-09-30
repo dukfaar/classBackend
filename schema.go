@@ -15,6 +15,7 @@ var Schema string = `
 			classes(first: Int, last: Int, before: String, after: String): ClassConnection!
 			class(id: ID!): Class!
 			classByName(name: String!): Class!
+			classByNameOrSynonym(name: String!): Class!
 		}
 
 		input ClassMutationInput {
