@@ -22,6 +22,7 @@ var Schema string = `
 			name: String
 			namespaceId: ID
 			synonyms: [String]
+			maxLevel: Int
 		}
 
 		type Mutation {

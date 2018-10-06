@@ -20,6 +20,10 @@ func (r *Resolver) NamespaceID() *graphql.ID {
 	return &id
 }
 
+func (r *Resolver) MaxLevel() *int32 {
+	return &r.Model.MaxLevel
+}
+
 func (r *Resolver) Synonyms() *[]*string {
 	l := make([]*string, len(r.Model.Synonyms))
 	for i, input := range r.Model.Synonyms {
