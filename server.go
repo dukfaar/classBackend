@@ -3,7 +3,6 @@ package main
 import (
 	"context"
 	"encoding/json"
-	"fmt"
 	"log"
 	"net/http"
 	"os"
@@ -28,9 +27,6 @@ func createApiGatewayFetcher() dukGraphql.Fetcher {
 	url := env.GetDefaultEnvVar("API_GATEWAY_HOST", "localhost") + ":" + env.GetDefaultEnvVar("API_GATEWAY_PORT", "8090")
 	path := env.GetDefaultEnvVar("API_GATEWAY_PATH", "/graphql")
 
-	fmt.Println(url)
-	fmt.Println(path)
-
 	apiGatewayFetcher, err := dukGraphql.NewHttpFetcher(url, path)
 
 	if err != nil {
@@ -39,9 +35,6 @@ func createApiGatewayFetcher() dukGraphql.Fetcher {
 
 	clientID := os.Getenv("CLIENT_ID")
 	clientSecret := os.Getenv("CLIENT_SECRET")
-
-	fmt.Println(clientID)
-	fmt.Println(clientSecret)
 
 	loginApiGatewayFetcher := dukGraphql.NewClientLoginHttpFetcher(apiGatewayFetcher, clientID, clientSecret)
 
